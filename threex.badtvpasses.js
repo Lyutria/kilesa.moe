@@ -79,7 +79,7 @@ THREEx.BadTVPasses	= function(){
 
 	this.kilSettings = kilSettings
 	function kilSettings() {
-		badTVPass.uniforms[ "distortion" ].value	= 2.5 // light distortion
+		badTVPass.uniforms[ "distortion" ].value	= 1.0 // light distortion
 		badTVPass.uniforms[ "distortion2" ].value	= 4.0 // Heavy distortion
 		badTVPass.uniforms[ "speed" ].value		    = 1.0 // Wave speed of distortion
 		badTVPass.uniforms[ "rollSpeed" ].value		= 0.1   // TV roll speed (vertical scrolling)
