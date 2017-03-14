@@ -82,7 +82,7 @@ THREEx.BadTVPasses	= function(){
 		badTVPass.uniforms[ "distortion" ].value	= 0.1 // light distortion
 		badTVPass.uniforms[ "distortion2" ].value	= 4.0 // Heavy distortion
 		badTVPass.uniforms[ "speed" ].value		    = 1.0 // Wave speed of distortion
-		badTVPass.uniforms[ "rollSpeed" ].value		= 4   // TV roll speed (vertical scrolling)
+		badTVPass.uniforms[ "rollSpeed" ].value		= 4.0   // TV roll speed (vertical scrolling)
 		badTVPass.uniforms[ "randomSeed" ].value	= 1  
 
 		staticPass.uniforms[ "amount" ].value		= 0   // Amount of fizzy static
