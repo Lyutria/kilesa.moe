@@ -1,8 +1,182 @@
+<!DOCTYPE html>
+<script src='vendor/three.js/build/three.min.js'></script>
+<script src='vendor/require.js/require.js'></script>
+<!-- include three.js postprocessing  -->
+<script src="vendor/three.js/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="vendor/three.js/examples/js/postprocessing/RenderPass.js"></script>
+<script src="vendor/three.js/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="vendor/three.js/examples/js/postprocessing/MaskPass.js"></script> 
+<script src="vendor/three.js/examples/js/shaders/CopyShader.js"></script>
+
+<!--
+    CHANGE <title> HERE TO CHANGE THE TEXT THAT SHOWS UP IN THE
+    TAB TEXT AND BOOKMARK OF THE PAGE
+-->
+
 <head>
-	<title>Kilesa.moe</title>
+	<title>Goob</title>
+	<link rel='stylesheet' type='text/css'  href='index.css' >
+    <link rel="icon"       type="image/png" href="/img/favicon.png">
 </head>
 
-<body>
-	<h1>It's a website</h1>
-	<p>okay</p>
+<body style='margin: 0px; background-color: #000; overflow: hidden;'>
+	<div class="header">
+	<div class="headerplay">
+		<span class="playbutton" onclick="playMusic();">play</span>
+	</div>
+
+<!--
+    CHANGE THE SAYING AT THE TOP OF THE PAGE HERE
+-->
+
+	<div class="headertext">
+		<span id="saying" class="saying">insert saying</span>
+	</div>
+	</div>
+
+<!--
+    CHANGE "sounds/resonance.mp3" TO WHATEVER SONG YOU WANT TO PLAY
+    PLACE THE SONG IN THE sounds/ FOLDER TO MAKE A NEW ONE.
+-->
+	<audio loop id="player">
+		  <source src="sounds/resonance.mp3" type="audio/mpeg">
+	</audio>
+
+	<div id="tvcontainer"></div>
+
+<!--
+    INSERT TEXT IN THE footertext DIV TO ADD TEXT TO THE BOTTOM OF
+    OF THE PAGE, LIKE THE HEADER PHRASE.
+-->
+
+	<div class="footer">
+		<div class="footertext"></div>
+	</div>
+
+<script>
+require(['package.require.js'], init);
+
+/***********************************************************************************
+
+    CHANGE THIS VALUE BELOW TO THE NUMBER OF PICTURES YOU HAVE IN THE IMG FOLDER
+
+***********************************************************************************/
+imgAmount = 1;
+
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function init() {
+	THREE.ImageUtils.crossOrigin = "";
+	var renderer	= new THREE.WebGLRenderer();
+	var aspect = 1080/1920;
+	renderer.setSize(window.innerWidth, window.innerWidth * aspect);
+	document.getElementById("tvcontainer").appendChild( renderer.domElement ).id = "tv";
+
+	var onRenderFcts= [];
+	var scene	= new THREE.Scene();
+	var camera	= new THREE.OrthographicCamera(window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, -10000, 10000 )
+	camera.position.z = 3;
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		add an object and make it move					//
+	//////////////////////////////////////////////////////////////////////////////////
+	var imgChoice = "img" + getRandomIntInclusive(1, imgAmount) + ".png";
+	var texture	= THREE.ImageUtils.loadTexture("img/" + imgChoice);
+
+	var geometry	= new THREE.PlaneGeometry(window.innerWidth, window.innerHeight);
+	var material	= new THREE.MeshBasicMaterial( { map : texture} );
+	var mesh = new THREE.Mesh( geometry, material );
+	scene.add( mesh )
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		badTVPasses							//
+	//////////////////////////////////////////////////////////////////////////////////
+
+	var badTVPasses	= new THREEx.BadTVPasses();
+
+	onRenderFcts.push(function(delta, now){
+		badTVPasses.update(delta, now)		
+	})
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		ping animation + sounds						//
+	//////////////////////////////////////////////////////////////////////////////////
+	window.AudioContext	= window.AudioContext || window.webkitAudioContext;
+	var context		    = new AudioContext()
+	var badTVJamming	= new THREEx.BadTVJamming(badTVPasses, context)
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		composer 							//
+	//////////////////////////////////////////////////////////////////////////////////
+
+	var composer	= new THREE.EffectComposer(renderer);
+	var renderPass	= new THREE.RenderPass( scene, camera );
+	composer.addPass( renderPass );
+
+	badTVPasses.addPassesTo(composer)
+	composer.passes[composer.passes.length -1 ].renderToScreen	= true;
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		render the scene						//
+	//////////////////////////////////////////////////////////////////////////////////
+	onRenderFcts.push(function(delta, now){
+		// disable rendering directly thru renderer 
+		// renderer.render( scene, camera )
+		composer.render(delta)
+	})
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		loop runner							//
+	//////////////////////////////////////////////////////////////////////////////////
+	var lastTimeMsec= null
+	requestAnimationFrame(function animate(nowMsec){
+		requestAnimationFrame( animate );
+		lastTimeMsec	= lastTimeMsec || nowMsec-1000/60
+		var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
+		lastTimeMsec	= nowMsec
+
+		onRenderFcts.forEach(function(onRenderFct){
+			onRenderFct(deltaMsec/1000, nowMsec/1000)
+		})
+	})
+
+	window.addEventListener('resize', onResize, false);
+	document.getElementById("tv").addEventListener('click', onTvClick, false);
+
+	function onResize() {
+		renderer.setSize(window.innerWidth, window.innerWidth * aspect);
+		camera.updateProjectionMatrix();
+	}
+
+	function onTvClick() {
+		var newImgChoice;
+		
+		do {
+			newImgChoice = "img" + getRandomIntInclusive(1, imgAmount) + ".png";
+		}
+		while (newImgChoice == imgChoice);
+		imgChoice = newImgChoice;
+
+		var newTexture	= THREE.ImageUtils.loadTexture("img/" + imgChoice);
+		mesh.material.map = newTexture;
+	}
+}
+
+var musicPlaying = false;
+function playMusic() {
+	if (musicPlaying == false) {
+		document.getElementById("player").volume = 0.5;
+		document.getElementById("player").play();
+		musicPlaying = true;
+	}
+	else {
+		document.getElementById("player").pause();
+		musicPlaying = false;
+	}
+}
+</script>
 </body>
