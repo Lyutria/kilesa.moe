@@ -164,14 +164,16 @@ function init() {
 	function onTvClick() {
 		var newImgChoice;
 		
-		do {
-			newImgChoice = "img" + getRandomIntInclusive(1, imgAmount) + ".png";
-		}
-		while (newImgChoice == imgChoice);
-		imgChoice = newImgChoice;
+		if (imgAmount > 1) {
+			do {
+				newImgChoice = "img" + getRandomIntInclusive(1, imgAmount) + ".png";
+			}
+			while (newImgChoice == imgChoice);
+			imgChoice = newImgChoice;
 
-		var newTexture	= THREE.ImageUtils.loadTexture("img/" + imgChoice);
-		mesh.material.map = newTexture;
+			var newTexture	= THREE.ImageUtils.loadTexture("img/" + imgChoice);
+			mesh.material.map = newTexture;
+		}
 	}
 }
 
