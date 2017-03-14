@@ -14,7 +14,7 @@
 -->
 
 <head>
-	<title>Goob</title>
+	<title>Kil</title>
 	<link rel='stylesheet' type='text/css'  href='index.css' >
     <link rel="icon"       type="image/png" href="/img/favicon.png">
 </head>
@@ -72,7 +72,16 @@ function getRandomIntInclusive(min, max) {
 function init() {
 	THREE.ImageUtils.crossOrigin = "";
 	var renderer	= new THREE.WebGLRenderer();
+
+/***********************************************************************************
+
+    CHANGE THESE VALUES TO YOUR RESOLUTION, SET TO 1080p screenshots.
+    Or, 1920 by 1080 = aspect of 1080/1920.
+
+***********************************************************************************/
+
 	var aspect = 1080/1920;
+
 	renderer.setSize(window.innerWidth, window.innerWidth * aspect);
 	document.getElementById("tvcontainer").appendChild( renderer.domElement ).id = "tv";
 
