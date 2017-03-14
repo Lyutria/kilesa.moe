@@ -81,8 +81,8 @@ THREEx.BadTVPasses	= function(){
 	function kilSettings() {
 		badTVPass.uniforms[ "distortion" ].value	= 0.1 // light distortion
 		badTVPass.uniforms[ "distortion2" ].value	= 4.0 // Heavy distortion
-		badTVPass.uniforms[ "speed" ].value		    = 1.0 // Wave speed of distortion
-		badTVPass.uniforms[ "rollSpeed" ].value		= 0.3   // TV roll speed (vertical scrolling)
+		badTVPass.uniforms[ "speed" ].value		    = 0.1 // Wave speed of distortion
+		badTVPass.uniforms[ "rollSpeed" ].value		= 0.1   // TV roll speed (vertical scrolling)
 		badTVPass.uniforms[ "randomSeed" ].value	= 1  
 
 		staticPass.uniforms[ "amount" ].value		= 0   // Amount of fizzy static
@@ -91,9 +91,9 @@ THREEx.BadTVPasses	= function(){
 		rgbPass.uniforms[ "angle" ].value		= 0 // DO NOT TOUCH
 		rgbPass.uniforms[ "amount" ].value		= 0 // DO NOT TOUCH
 
-		filmPass.uniforms[ "sCount" ].value		    = 800 // Chromatic abberation or something
-		filmPass.uniforms[ "sIntensity" ].value		= 0.9 // I've forgotten
-		filmPass.uniforms[ "nIntensity" ].value 	= 0.8 // okay?
+		filmPass.uniforms[ "sCount" ].value		    = 668 // Scanlines
+		filmPass.uniforms[ "sIntensity" ].value		= 0.9 // Horizontal density
+		filmPass.uniforms[ "nIntensity" ].value 	= 0.8 // Vertical desnity
 	}
 
 	function updateUniforms() {
